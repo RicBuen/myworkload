@@ -1,0 +1,67 @@
+import mysql.connector
+
+conn = mysql.connector.connect(
+        host="localhost",
+        user="ric",
+        password="helloworld",
+        database="taskmanager"
+)
+
+mycursor = conn.cursor()
+
+createDbs = """
+     CREATE TABLE useraccounts\
+     (\
+         user_id int NOT NULL AUTO_INCREMENT,\
+         user_firstname varchar(100) NOT NULL,\
+         user_lastname varchar(100) NOT NULL,\
+         user_username varchar(100) NOT NULL,\
+         user_password varchar(100) NOT NULL,\
+         user_email varchar(100) NOT NULL,\
+         user_tele varchar(100) NOT NULL, /*stores the telephone number of a user*/\
+         user_status varchar(255),\
+         user_pic varchar(255), /*stores the path of the uploaded profile picture*/\
+         PRIMARY KEY(user_id) /*make the user_id the primary key*/\
+    );\
+
+    CREATE TABLE userfuturelist\
+    (\
+         usertask_id int NOT NULL AUTO_INCREMENT,\
+         user_id int NOT NULL,\
+         task_id int NOT NULL,\
+         f_task_desc text NOT NULL, /* stands for future task description */\
+         f_add_notes text, /* stands for future additional notes */\
+         f_task_type text NOT NULL, /* stands for future task type */\
+         f_task_priority text NOT NULL, /* stands for future task priority */\
+         f_task_startduration varchar(100) NOT NULL, /* stands for future start time of task */ \
+         f_task_endduration varchar(100) NOT NULL, /* stands for future end time of task */ \
+         PRIMARY KEY(usertask_id) \
+    );\
+
+    CREATE TABLE userschedule\
+    (\
+         usertask_id int NOT NULL AUTO_INCREMENT,\
+         user_id int NOT NULL,\
+         task_id int NOT NULL,\
+         task_desc text NOT NULL,\
+         add_notes text,\
+         task_type text NOT NULL,\
+         task_priority text NOT NULL, /*contains the importance of the task*/\
+         task_startduration varchar(100) NOT NULL, /*contains the start time of task*/\
+         task_endduration varchar(100) NOT NULL, /*contains the end time of task*/\
+         PRIMARY KEY(usertask_id)\
+    );\
+
+    CREATE TABLE usertasks\
+    (\
+         user_id int NOT NULL,\
+         task_id int NOT NULL AUTO_INCREMENT,\
+         task_desc text NOT NULL, \
+         add_notes text, /*additional notes are optional*/\
+         task_type text NOT NULL,\
+         PRIMARY KEY(task_id),\
+         FOREIGN KEY(user_id) REFERENCES useraccounts(user_id)\
+    );
+ """
+
+mycursor.execute(createDbs)
